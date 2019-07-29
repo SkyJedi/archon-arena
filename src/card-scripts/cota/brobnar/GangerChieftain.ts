@@ -1,16 +1,17 @@
-import { CardScript } from "../../types/CardScript"
+import { CardActionConfig, CardScript } from "../../types/CardScript"
 import { cardScripts } from "../../CardScripts"
+import { GameState } from "../../../shared/gamestate/GameState"
 import { Creature } from "../../../shared/gamestate/Creature"
-import {friendlyCreatures, readyCreature, fightUsingCreature, getNeighbors} from "../../ScriptUtils"
+import { fightUsingCreature, friendlyCreatures, getNeighbors, readyCreature } from "../../ScriptUtils"
 
 const cardScript: CardScript = {
     power: () => 5,
     onPlay: {
-        validTargets: (state, config) => {
+        validTargets: (state: GameState, config: CardActionConfig) => {
             return getNeighbors(friendlyCreatures(state), config.thisCard as Creature)
         },
         numberOfTargets: () => 1,
-        perform: (state, config) => {
+        perform: (state: GameState, config: CardActionConfig) => {
             const targetedCreature = config.targets![0] as Creature
             readyCreature(targetedCreature)
             fightUsingCreature(targetedCreature)

@@ -5,6 +5,7 @@ import { GameState } from "../../shared/gamestate/GameState"
 import { GameEvent } from "../GameEvent"
 import { getCardInHandById, getCardOwner, getCreatureById, getPlayerById, removeCardFromHand, removeCreature } from "../StateUtils"
 import { cardScripts } from "../../card-scripts/CardScripts"
+import { CardActionConfig } from "../../card-scripts/types/CardScript"
 
 export default {
     [GameEvent.PlayCreature]: (action: Action, state: GameState) => {
@@ -16,10 +17,10 @@ export default {
         const cardScript = cardScripts.scripts.get(card!.backingCard.cardTitle.replace(/ /g, "-").toLowerCase())
         if (cardScript) {
             if (cardScript.amber) {
-                owner.amber += cardScript.amber(state, { thisCard: card })
+                owner.amber += cardScript.amber(state, { thisCard: card } as CardActionConfig)
             }
             if (cardScript.onPlay && cardScript.onPlay.perform) {
-                cardScript.onPlay.perform(state, { thisCard: card })
+                cardScript.onPlay.perform(state, { thisCard: card } as CardActionConfig)
             }
         }
 
@@ -28,6 +29,13 @@ export default {
             ready: false,
             faceup: true,
             taunt: false,
+            elusive: false,
+            deploy: false,
+            poison: false,
+            skirmish: false,
+            assault: 0,
+            hazardous: 0,
+            armor: 0,
             upgrades: [],
             cardsUnderneath: [],
             tokens: {
@@ -36,10 +44,13 @@ export default {
                 damage: 0,
                 amber: 0,
                 stun: 0,
+                skirmish: 0,
+                elusive: 0,
                 doom: 0
             },
             power: card.backingCard.power,
             traits: card.backingCard.traits,
+            house: card.backingCard.house,
             ownerId: owner.player.id,
             backingCard: card.backingCard,
         }
@@ -62,6 +73,7 @@ export default {
         const card: CardInGame = {
             id: creature.id,
             ownerId: owner.player.id,
+            house: creature.backingCard.house,
             backingCard: creature.backingCard,
         }
         owner.hand.push(card)

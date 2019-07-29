@@ -1,19 +1,20 @@
-import {CardScript} from "../../types/CardScript"
-import {cardScripts} from "../../CardScripts"
-import {activePlayerState, putInHand, shuffleDeck} from "../../ScriptUtils"
+import { CardActionConfig, CardScript } from "../../types/CardScript"
+import { cardScripts } from "../../CardScripts"
+import { GameState } from "../../../shared/gamestate/GameState"
+import { activePlayerState, putInHand, shuffleDeck } from "../../ScriptUtils"
 
 const cardScript: CardScript = {
     power: () => 4,
     reap: {
-        validTargets: (state) => {
+        validTargets: (state: GameState) => {
             return activePlayerState(state)
                 .library
                 .concat(activePlayerState(state).discard)
                 .filter(card => card.backingCard.cardTitle === "War Grumpus")
         },
         numberOfTargets: () => 1,
-        perform: (state, config) => {
-            putInHand(config.targets![0])
+        perform: (state: GameState, config: CardActionConfig) => {
+            putInHand(state, config.targets!)
             shuffleDeck(activePlayerState(state))
         }
     }

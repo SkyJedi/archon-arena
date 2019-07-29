@@ -1,10 +1,11 @@
 import { CardScript } from "../../types/CardScript"
 import { cardScripts } from "../../CardScripts"
-import {activePlayerState} from "../../ScriptUtils";
+import { GameState } from "../../../shared/gamestate/GameState"
+import { activePlayerState } from "../../ScriptUtils"
 
 const cardScript: CardScript = {
     onKeyForge: {
-        perform: (state) => {
+        perform: (state: GameState) => {
             activePlayerState(state).amber = 0
         }
     }

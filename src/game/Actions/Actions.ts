@@ -1,4 +1,4 @@
-import { shuffle } from "lodash"
+import {ceil, shuffle} from "lodash"
 import Action from "../../shared/Action"
 import { CardInGame } from "../../shared/gamestate/CardInGame"
 import { GameState, PlayerState as Player } from "../../shared/gamestate/GameState"
@@ -20,7 +20,9 @@ import {
 } from "../StateUtils"
 import ArtifactActions from "./Artifact"
 import CreatureActions from "./Creature"
+
 import { cardScripts } from "../../card-scripts/CardScripts"
+import { CardActionConfig } from "../../card-scripts/types/CardScript"
 
 export const exec = (action: Action, state: GameState) => {
 
@@ -31,10 +33,10 @@ export const exec = (action: Action, state: GameState) => {
             const cardScript = cardScripts.scripts.get(card!.backingCard.cardTitle.replace(/ /g, "-").toLowerCase())
             if (cardScript) {
                 if (cardScript.amber) {
-                    owner.amber += cardScript.amber(state, { thisCard: card! })
+                    owner.amber += cardScript.amber(state, { thisCard: card! } as CardActionConfig)
                 }
                 if (cardScript.onPlay && cardScript.onPlay.perform) {
-                    cardScript.onPlay.perform(state, { thisCard: card! })
+                    cardScript.onPlay.perform(state, { thisCard: card! } as CardActionConfig)
                 }
             }
             removeCardFromHand(owner, action.cardId)
@@ -157,6 +159,7 @@ export const exec = (action: Action, state: GameState) => {
             const player = getPlayerById(action.player!.id, state)
             player.chains += action.amount!
             player.chains = Math.max(player.chains, 0)
+            player.handSize = 6 - ceil(player.chains / 6)
         },
         [GameEvent.AlterPlayerAmber]: () => {
             const player = getPlayerById(action.player!.id, state)

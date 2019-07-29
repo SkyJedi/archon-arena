@@ -1,7 +1,8 @@
-import {CardScript} from "../../types/CardScript"
-import {cardScripts} from "../../CardScripts"
-import {activePlayerState, dealDamage, enemyCreatures} from "../../ScriptUtils"
-import {Creature} from "../../../shared/gamestate/Creature"
+import { CardActionConfig, CardScript } from "../../types/CardScript"
+import { cardScripts } from "../../CardScripts"
+import { GameState } from "../../../shared/gamestate/GameState"
+import { activePlayerState, dealDamage, enemyCreatures } from "../../ScriptUtils"
+import { Creature } from "../../../shared/gamestate/Creature"
 
 const cardScript: CardScript = {
     alpha: () => true,
@@ -11,8 +12,8 @@ const cardScript: CardScript = {
         numberOfTargets: (state) => {
             return activePlayerState(state).amber < 3 ? 0 : 1
         },
-        perform: (state, config) => {
-            dealDamage(config.targets![0] as Creature, 3)
+        perform: (state: GameState, config: CardActionConfig) => {
+            dealDamage(config.targets! as Creature[], 3)
         }
     }
 }

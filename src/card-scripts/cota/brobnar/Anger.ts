@@ -1,12 +1,11 @@
+import { CardActionConfig, CardScript } from "../../types/CardScript"
 import { cardScripts } from "../../CardScripts"
-import { CardScript } from "../../types/CardScript"
+import { GameState } from "../../../shared/gamestate/GameState"
 import { Creature } from "../../../shared/gamestate/Creature"
-import { friendlyCreatures, readyCreature, fightUsingCreature } from "../../ScriptUtils"
-import { GameState  } from "../../../shared/gamestate/GameState"
-import { CardActionConfig  } from "../../types/CardScript"
+import { fightUsingCreature, friendlyCreatures, readyCreature } from "../../ScriptUtils"
 
 const cardScript: CardScript = {
-    amber: () =>  1,
+    amber: () => 1,
     onPlay: {
         validTargets: friendlyCreatures,
         numberOfTargets: () => 1,

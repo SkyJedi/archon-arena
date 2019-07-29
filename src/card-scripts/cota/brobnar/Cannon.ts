@@ -1,15 +1,15 @@
-import { CardScript } from "../../types/CardScript"
+import { CardActionConfig, CardScript } from "../../types/CardScript"
 import { cardScripts } from "../../CardScripts"
+import { GameState } from "../../../shared/gamestate/GameState"
 import { Creature } from "../../../shared/gamestate/Creature"
-import { allCreatures , dealDamage } from "../../ScriptUtils"
+import { allCreatures, dealDamage } from "../../ScriptUtils"
 
 const cardScript: CardScript = {
     action: {
         validTargets: allCreatures,
         numberOfTargets: () => 1,
-        perform: (state, config) => {
-            const targetedCreature = config.targets![0] as Creature
-            dealDamage(targetedCreature, 2)
+        perform: (state: GameState, config: CardActionConfig) => {
+            dealDamage(config.targets! as Creature[], 2)
         }
     }
 }

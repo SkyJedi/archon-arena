@@ -1,12 +1,13 @@
-import {CardScript} from "../../types/CardScript"
-import {cardScripts} from "../../CardScripts"
-import {Creature} from "../../../shared/gamestate/Creature"
-import {captureAmber, enemyCreatures, friendlyCreatures} from "../../ScriptUtils"
+import { CardActionConfig, CardScript } from "../../types/CardScript"
+import { cardScripts } from "../../CardScripts"
+import { GameState } from "../../../shared/gamestate/GameState"
+import { Creature } from "../../../shared/gamestate/Creature"
+import { captureAmber, enemyCreatures, friendlyCreatures } from "../../ScriptUtils"
 
 const cardScript: CardScript = {
     amber: () => 1,
     onPlay: {
-        validTargets: (state) => {
+        validTargets: (state: GameState) => {
             return friendlyCreatures(state).length > enemyCreatures(state).length ? friendlyCreatures(state) : []
         },
         numberOfTargets: (state) => {
@@ -14,10 +15,10 @@ const cardScript: CardScript = {
         },
         chosenTargetsAreValid: (targets, state) => {
             return friendlyCreatures(state).length - enemyCreatures(state).length === targets.length
-            && new Set(targets).size === targets.length
+                && new Set(targets).size === targets.length
         },
         uniqueTargets: () => true,
-        perform: (state, config) => {
+        perform: (state: GameState, config: CardActionConfig) => {
             config.targets!.forEach(creature => captureAmber(state, creature as Creature, 1))
         }
     }
