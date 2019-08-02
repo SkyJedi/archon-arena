@@ -44,6 +44,11 @@ export interface CardScript {
     fight?: IndividualScript
 
     /**
+     * Braineater, etc.
+     */
+    onDestroyedEnemyInFight?: IndividualScript
+
+    /**
      * Greking, Brain Eater, Krump, etc. Check in action log if destroyed.
      */
     onAnyFight?: IndividualScript
@@ -145,15 +150,12 @@ export interface CardScript {
     runAtStartOfNextTurn?: IndividualScript
 }
 
-interface IndividualScript {
+export interface IndividualScript {
     perform: CardScriptExecution
-    numberOfTargets?: (state: GameState, config: CardActionConfig) => number
-    uniqueTargets?: () => boolean
-    upToTargets?: () => boolean
+    numberOfTargets?: (state: GameState, config: CardActionConfig) => number //defaults 1
+    uniqueTargets?: () => boolean //default true
+    upToTargets?: () => boolean //defaults false
     validTargets?: (state: GameState, config: CardActionConfig) => CardInGame[]
-    validSecondaryTargets?: (state: GameState, config: CardActionConfig) => CardInGame[]
-    numberOfSecondaryTargets?: (state: GameState) => number
-    upToSecondaryTargets?: () => boolean
     //TODO selectFromChoices () => config.selection
     selectFromChoices?: (state: GameState, config: CardActionConfig) => string[] | number[]
     chosenTargetsAreValid?: (targets: CardInGame[], state: GameState) => boolean
@@ -170,7 +172,6 @@ type CurrentQuantity = (state: GameState, config: CardActionConfig) => number
 
 export interface CardActionConfig {
     targets: AnyCardInGame[]
-    secondaryTargets: AnyCardInGame[]
     thisCard: CardInGame
     selection: string | number
     triggerCard: CardInGame
